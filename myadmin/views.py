@@ -90,13 +90,30 @@ def myadmin_object_list(request, model_name):
     view.get_context_data = get_context_data
     return view.as_view()(request)
 
-# def myadmin_update(request, pk):
 
 def myadmin_detail(request, model_name, pk):
+    from collections import OrderedDict
     detail = DetailView
     detail.model = get_model(model_name)
-    detail.template_name = "myadmin/detail.html"
+    detail.template_name = "myadmin/object_detail.html"
+    obj = detail.model.objects.get(id = pk)
+    def get_model_fields(model):
+        f_name = [f.name for f in detail.model._meta.get_fields()]
+        a = []
+        for f in f_name:
+            a.append(getattr(obj, f))
 
+        my_list = zip(f_name, a)
+        return my_list
+
+    detail.model.get_model_fields = get_model_fields
+
+    def get_context_data(self, **kwargs):
+        context = super(detail, self).get_context_data(**kwargs)
+        context['model_name'] = model_name
+        return context
+
+    detail.get_context_data = get_context_data
     return detail.as_view()(request, pk=pk)
 
 def myadmin_object_delete(request, model_name, pk):
@@ -113,8 +130,8 @@ def myadmin_object_delete(request, model_name, pk):
 def myadmin_object_update(request, model_name, pk):
     updator = UpdateView
     updator.model = get_model(model_name)
-    updator.success_url = reverse_lazy('myadmin-models-list',
-        kwargs={'model_name': model_name},)
+    updator.success_url = reverse_lazy('myadmin-object-list',
+        kwargs={'model_name': model_name})
 
     updator.fields = '__all__'
     def get_template_names(instance):

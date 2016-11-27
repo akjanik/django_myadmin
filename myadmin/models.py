@@ -23,7 +23,8 @@ class Person(models.Model):
     last_name = models.CharField(max_length=30)
     email = models.EmailField(max_length = 50, blank = True)
     age = models.IntegerField()
-
+    def __str__(self):
+        return self.first_name
 
     # def get_absolute_url(self):
     #     return url(r'^Person/(?P<pk>\d+)/$', person_detail, name="person-detail")
