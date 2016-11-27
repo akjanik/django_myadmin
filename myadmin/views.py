@@ -1,6 +1,6 @@
 from django.shortcuts import render, render_to_response
 import django.apps
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 import json
 
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView, CreateView
@@ -34,7 +34,7 @@ def myadmin_home(request):
 
     # return render(request, "myadmin/myadmin_home.html",
     #      context={'model_list': model_list})
-    print(model_list)
+    # print(model_list)
     return render(request, 'myadmin/myadmin_home.html',
         context = {'model_list': model_list})
     # return HttpResponse("My chosen models:" + ", ".join(model_list))
@@ -44,33 +44,49 @@ def myadmin_home(request):
 def myadmin_add(request):
     print(request.POST)
     response = json.dumps(request.POST)
-
+    success_url = reverse_lazy('myadmin-home')
     model_list = django.apps.apps.get_models()
     chosen_model = [obj.__name__ for obj in model_list if obj.__name__ in request.POST.values()]
-    if chosen_model:
+    print(chosen_model)
+    if MyAdmin.objects.filter(name = chosen_model[0]).exists():
+        return HttpResponse("Model {} already exists in database".format(chosen_model[0]))
+    elif chosen_model:
         a = MyAdmin()
         a.name = chosen_model[0]
         a.save()
 
-    return HttpResponse("request.POST:" + ", "+response)
+    return HttpResponseRedirect(success_url)
 
-def myadmin_delete(request):
-    my_name = request.POST["name"]
-    temp = MyAdmin.objects.get(name = my_name).delete()
-    return HttpResponse("Job done")
+def myadmin_delete(request, model_name):
+    success_url = reverse_lazy('myadmin-home')
+    model = MyAdmin.objects.get(name = model_name)
+    print(request.method, request.POST)
+    if request.method == "POST" and "delete" in request.POST:
+        model.delete()
+        return HttpResponseRedirect(success_url)
+    else:
+        return HttpResponse("Not implemented")
+        # return HttpResponseRedirect(model.get_absolute_url())
+    # my_name = request.POST["name"]
+    # temp = MyAdmin.objects.get(name = my_name).delete()
+    # return HttpResponse("Job done")
 
 def myadmin_all(request):
     model_list = django.apps.apps.get_models()
     model_list = [obj.__name__ for obj in model_list if obj.__name__ in models]
-    return HttpResponse("My available models:" + ", ".join(model_list))
+    return render(request, 'myadmin/myadmin_list.html',
+        context = {'model_list': model_list})
+    # return HttpResponse("My available models:" + ", ".join(model_list))
 
+
+# PARTICUAL OBJECT RELATED VIEWS
 def myadmin_list_model(request, model_name):
     print(model_name)
     view = ListView
     # tmp = django.apps.apps.get_models()
 
     view.model = get_model(model_name)
-    view.template_name = "myadmin/model_list.html"
+    view.template_name = "myadmin/object_list.html"
     #MyAdmin.objects.filter(name = model_name)[0]
 
     return view.as_view()(request)

@@ -1,9 +1,14 @@
 {% extends 'myadmin/myadmin_base.html' %}
 {% block container %}
-  <h3 class="title">All selected modules</h3>
+  <h3>All selected modules</h3>
   <div class="collection">
     {% for model in model_list %}
-        <a href="{% url 'myadmin-models-list' model %}">{{model}}</a> </br>
+        <a href="{% url 'myadmin-models-list' model %}">{{model}}</a>
+        &emsp;
+        <form method="POST" action="{% url 'myadmin-delete' model %}">
+                {% csrf_token %}<input type="submit" name="delete" value="REMOVE THIS MODEL">
+        </form>
+        <br>
     {% endfor %}
   </div>
   <div>

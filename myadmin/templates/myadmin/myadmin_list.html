@@ -1,0 +1,12 @@
+{% extends 'myadmin/myadmin_base.html' %}
+
+{% block container %}
+<h3>All models possible to add to admin panel</h3>
+<p>Click button to add model to database</p>
+{% for model_name in model_list %}
+<form method="POST" action="{% url 'myadmin-add' %}">
+        <input type="submit" name=model_name value={{model_name}}>
+ <br>
+{% endfor %}
+
+{% endblock %}

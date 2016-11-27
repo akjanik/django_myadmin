@@ -1,3 +1,5 @@
+{% extends 'myadmin/myadmin_base.html' %}
+
 {% for object in object_list %}
 <p> {{ object.id }} {{ object }} </p> <br>
     {% endfor %}
