@@ -19,6 +19,7 @@ def get_model(model_name):
 
 @login_required(login_url='admin/')
 def myadmin_home(request):
+    """ Home page for app"""
     model_list = []
     for obj in MyAdmin.objects.all():
         model_list.append(obj.name)
@@ -27,6 +28,9 @@ def myadmin_home(request):
 
 @require_http_methods(['GET', 'POST'])
 def myadmin_add(request):
+    """
+    This method adds selected model to model list
+    """
     success_url = reverse_lazy('myadmin-home')
     model_list = django.apps.apps.get_models()
     chosen_model = [obj.__name__ for obj in model_list if obj.__name__ in request.POST.values()]
@@ -40,6 +44,9 @@ def myadmin_add(request):
     return HttpResponseRedirect(success_url)
 
 def myadmin_delete(request, model_name):
+    """
+    Remove model from the list
+    """
     success_url = reverse_lazy('myadmin-home')
     model = MyAdmin.objects.get(name = model_name)
     print(request.method, request.POST)
@@ -51,6 +58,9 @@ def myadmin_delete(request, model_name):
 
 @login_required(login_url='admin/')
 def myadmin_all(request):
+    """
+    List all models added to db of MyAdmin
+    """
     model_list = django.apps.apps.get_models()
     model_list = [obj.__name__ for obj in model_list if obj.__name__ in MODELS]
     return render(request, 'myadmin/myadmin_list.html',
@@ -60,6 +70,9 @@ def myadmin_all(request):
 # PARTICUAL OBJECT RELATED VIEWS
 @login_required(login_url='admin/')
 def myadmin_object_list(request, model_name):
+    """
+    Lists objects of selected model
+    """
     view = ListView
     view.model = get_model(model_name)
     view.template_name = "myadmin/object_list.html"
@@ -74,6 +87,9 @@ def myadmin_object_list(request, model_name):
 
 @login_required(login_url='admin/')
 def myadmin_detail(request, model_name, pk):
+    """
+    Object detail
+    """
     from collections import OrderedDict
     detail = DetailView
     detail.model = get_model(model_name)
@@ -85,6 +101,7 @@ def myadmin_detail(request, model_name, pk):
         for f in f_name:
             a.append(getattr(obj, f))
 
+        # very naive, but it works
         my_list = zip(f_name, a)
         return my_list
 
@@ -99,6 +116,9 @@ def myadmin_detail(request, model_name, pk):
     return detail.as_view()(request, pk=pk)
 
 def myadmin_object_delete(request, model_name, pk):
+    """
+    Delete object from particular database
+    """
     deletator = DeleteView
     deletator.model = get_model(model_name)
     deletator.success_url = reverse_lazy('myadmin-object-list',
@@ -125,6 +145,9 @@ def myadmin_object_update(request, model_name, pk):
 
 @login_required(login_url='admin/')
 def myadmin_object_create(request, model_name):
+    """
+    Adds new entry to a database
+    """
     creator = CreateView
 
     creator.model = get_model(model_name)
