@@ -1,5 +1,6 @@
 {% extends 'myadmin/myadmin_base.html' %}
 {% block container %}
+{% csrf_token %}
   <h3>All selected modules</h3>
   <div class="collection">
     {% for model in model_list %}

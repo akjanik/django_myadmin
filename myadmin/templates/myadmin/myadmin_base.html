@@ -6,6 +6,7 @@
   </head>
   <body>
     {% block body %}
+    {% csrf_token %}
       <div class="container">
         {% block container %}{% endblock %}
       </div>

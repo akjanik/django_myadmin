@@ -1,0 +1,15 @@
+{% extends 'myadmin/myadmin_base.html' %}
+
+{% block container %}
+{% csrf_token %}
+  <h3>All selected modules</h3>
+  <div>
+    {% for model in model_list %}
+
+    {% endfor %}
+  </div>
+  <div>
+      <br>
+      <a href="{% url 'myadmin-all' %}">Add module</a>
+  </div>
+{% endblock %}

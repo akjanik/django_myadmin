@@ -1,6 +1,7 @@
 {% extends 'myadmin/myadmin_base.html' %}
 
 {% block container %}
+{% csrf_token %}
 <h3>List of objects in {{model_name}} </h3>
 {% for object in object_list %}
 <p> {{ object.id }}

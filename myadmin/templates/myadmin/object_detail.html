@@ -2,7 +2,7 @@
 
 {% block container %}
 <h3>List of values for {{ object }} </h3>
-
+{% csrf_token %}
 {% for field, value in object.get_model_fields %}
 <p>{{field}} = {{value}}<p>
 {% endfor %}
