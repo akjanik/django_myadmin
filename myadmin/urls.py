@@ -1,9 +1,6 @@
 from django.conf.urls import url
 
 from .views import *
-# from .views import blog_home, article_detail, article_create, article_delete, \
-                #    article_update
-
 
 urlpatterns = [
 
@@ -18,10 +15,4 @@ urlpatterns = [
     url(r'^(?P<model_name>\w+)/create/$', myadmin_object_create, name="myadmin-creator"),
     url(r'^(?P<model_name>\w+)/(?P<pk>\d+)/update$', myadmin_object_update, name="myadmin-update"),
 
-    # url(r'^(?P<model_name>\w+)/(?P<pk>\d+)/$', person_detail, name="person-detail"),
-
-#
-#     url(r'^create/$', article_create, name="article-create"),
-#     url(r'^delete/(?P<pk>\d+)/$', article_delete, name="article-delete"),
-#     url(r'^update/(?P<pk>\d+)/$', article_update, name="article-update"),
 ]

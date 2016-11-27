@@ -26,9 +26,6 @@ class Person(models.Model):
     def __str__(self):
         return self.first_name
 
-    # def get_absolute_url(self):
-    #     return url(r'^Person/(?P<pk>\d+)/$', person_detail, name="person-detail")
-
 class Book(models.Model):
     title = models.CharField(max_length=50)
     author = models.CharField(max_length = 30)

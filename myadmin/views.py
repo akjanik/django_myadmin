@@ -12,18 +12,15 @@ from django.core.urlresolvers import reverse_lazy
 
 from myadmin.models import *
 
+# VERY IMPORTANT
+# HERE IS THE LIST OF MODELS "REGISTERED" IN ADMIN PANEL
 models = ["Model1", "Person", "Book"]
 
 def get_model(model_name):
     tmp = django.apps.apps.get_models()
     return [obj for obj in tmp if obj.__name__ == model_name][0]
 
-
-
 def myadmin_home(request):
-    # return render(request, "myadmin/myadmin_home.html",
-    #     context={'model_list': model_list})
-
     model_list = []
     for obj in MyAdmin.objects.all():
         model_list.append(obj.name)
@@ -63,7 +60,6 @@ def myadmin_all(request):
     model_list = [obj.__name__ for obj in model_list if obj.__name__ in models]
     return render(request, 'myadmin/myadmin_list.html',
         context = {'model_list': model_list})
-    # return HttpResponse("My available models:" + ", ".join(model_list))
 
 
 # PARTICUAL OBJECT RELATED VIEWS
