@@ -11,7 +11,7 @@ from myadmin.models import *
 
 # VERY IMPORTANT
 # HERE IS THE LIST OF MODELS "REGISTERED" IN ADMIN PANEL
-models = ["Model1", "Person", "Book"]
+MODELS = ["Model1", "Person", "Book", "Fruit"]
 
 def get_model(model_name):
     tmp = django.apps.apps.get_models()
@@ -52,7 +52,7 @@ def myadmin_delete(request, model_name):
 @login_required(login_url='admin/')
 def myadmin_all(request):
     model_list = django.apps.apps.get_models()
-    model_list = [obj.__name__ for obj in model_list if obj.__name__ in models]
+    model_list = [obj.__name__ for obj in model_list if obj.__name__ in MODELS]
     return render(request, 'myadmin/myadmin_list.html',
         context = {'model_list': model_list})
 

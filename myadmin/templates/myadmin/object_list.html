@@ -7,5 +7,5 @@
 <p> {{ object.id }}
 <a href="{% url 'myadmin-detail' pk=object.id model_name=model_name %}">{{object}}</a></p>
 {% endfor %}
-
+<a href="{% url 'myadmin-creator' model_name=model_name %}">Create new object</a>
 {% endblock %}

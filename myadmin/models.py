@@ -34,3 +34,11 @@ class Book(models.Model):
 
     def __str__(self):
         return self.title
+
+class Fruit(models.Model):
+    name = models.CharField(max_length=20)
+    description = models.TextField()
+    weight = models.IntegerField()
+
+    def __str__(self):
+        return self.name
