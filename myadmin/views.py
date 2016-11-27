@@ -1,13 +1,10 @@
 from django.shortcuts import render, render_to_response
 import django.apps
 from django.http import HttpResponse, HttpResponseRedirect
-import json
-
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView, CreateView
 from django.utils import timezone
-
 from django.views.decorators.http import require_http_methods
-
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy
 
 from myadmin.models import *
@@ -20,6 +17,7 @@ def get_model(model_name):
     tmp = django.apps.apps.get_models()
     return [obj for obj in tmp if obj.__name__ == model_name][0]
 
+@login_required(login_url='admin/')
 def myadmin_home(request):
     model_list = []
     for obj in MyAdmin.objects.all():
@@ -29,12 +27,9 @@ def myadmin_home(request):
 
 @require_http_methods(['GET', 'POST'])
 def myadmin_add(request):
-    print(request.POST)
-    response = json.dumps(request.POST)
     success_url = reverse_lazy('myadmin-home')
     model_list = django.apps.apps.get_models()
     chosen_model = [obj.__name__ for obj in model_list if obj.__name__ in request.POST.values()]
-    print(chosen_model)
     if MyAdmin.objects.filter(name = chosen_model[0]).exists():
         return HttpResponse("Model {} already exists in database".format(chosen_model[0]))
     elif chosen_model:
@@ -54,7 +49,7 @@ def myadmin_delete(request, model_name):
     else:
         return HttpResponse("Not implemented")
 
-
+@login_required(login_url='admin/')
 def myadmin_all(request):
     model_list = django.apps.apps.get_models()
     model_list = [obj.__name__ for obj in model_list if obj.__name__ in models]
@@ -63,6 +58,7 @@ def myadmin_all(request):
 
 
 # PARTICUAL OBJECT RELATED VIEWS
+@login_required(login_url='admin/')
 def myadmin_object_list(request, model_name):
     view = ListView
     view.model = get_model(model_name)
@@ -76,7 +72,7 @@ def myadmin_object_list(request, model_name):
     view.get_context_data = get_context_data
     return view.as_view()(request)
 
-
+@login_required(login_url='admin/')
 def myadmin_detail(request, model_name, pk):
     from collections import OrderedDict
     detail = DetailView
@@ -113,6 +109,7 @@ def myadmin_object_delete(request, model_name, pk):
     deletator.get_template_names = get_template_names
     return deletator.as_view()(request, pk=pk)
 
+@login_required(login_url='admin/')
 def myadmin_object_update(request, model_name, pk):
     updator = UpdateView
     updator.model = get_model(model_name)
@@ -126,6 +123,7 @@ def myadmin_object_update(request, model_name, pk):
     updator.get_template_names = get_template_names
     return updator.as_view()(request, pk=pk)
 
+@login_required(login_url='admin/')
 def myadmin_object_create(request, model_name):
     creator = CreateView
 
