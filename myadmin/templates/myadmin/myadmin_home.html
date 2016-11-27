@@ -1,0 +1,10 @@
+<h1>{{myadmin}}</h1>
+
+<a href="{% url 'myadmin-home' %}">Myadmin Home</a>
+
+
+{% for model in model_list %}
+<p>
+    {{model}} <br>
+</p>
+{% endfor %}
