@@ -26,7 +26,8 @@ def myadmin_home(request):
     return render(request, 'myadmin/myadmin_home.html',
         context = {'model_list': model_list})
 
-@require_http_methods(['GET', 'POST'])
+# @require_http_methods(['GET', 'POST'])
+@login_required(login_url='admin/')
 def myadmin_add(request):
     """
     This method adds selected model to model list
