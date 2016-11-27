@@ -1,10 +1,13 @@
-<h1>{{myadmin}}</h1>
-
-<a href="{% url 'myadmin-home' %}">Myadmin Home</a>
-
-
-{% for model in model_list %}
-<p>
-    {{model}} <br>
-</p>
-{% endfor %}
+{% extends 'myadmin/myadmin_base.html' %}
+{% block container %}
+  <h3 class="title">All selected modules</h3>
+  <div class="collection">
+    {% for model in model_list %}
+        <a href="{% url 'myadmin-models-list' model %}">{{model}}</a> </br>
+    {% endfor %}
+  </div>
+  <div>
+      <br>
+      <a href="{% url 'myadmin-all' %}">Add module</a>
+  </div>
+{% endblock %}

@@ -35,7 +35,9 @@ def myadmin_home(request):
     # return render(request, "myadmin/myadmin_home.html",
     #      context={'model_list': model_list})
     print(model_list)
-    return HttpResponse("My chosen models:" + ", ".join(model_list))
+    return render(request, 'myadmin/myadmin_home.html',
+        context = {'model_list': model_list})
+    # return HttpResponse("My chosen models:" + ", ".join(model_list))
 
 
 @require_http_methods(['GET', 'POST'])
