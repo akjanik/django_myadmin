@@ -1,5 +1,10 @@
 {% extends 'myadmin/myadmin_base.html' %}
 
+{% block container %}
+<h3>List of objects in {{model_name}} </h3>
 {% for object in object_list %}
-<p> {{ object.id }} {{ object }} </p> <br>
-    {% endfor %}
+<p> {{ object.id }}
+<a href="{% url 'myadmin-detail' pk=object.id model_name=model_name %}">{{object}}</a></p>
+{% endfor %}
+
+{% endblock %}

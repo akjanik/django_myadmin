@@ -66,10 +66,7 @@ def myadmin_delete(request, model_name):
         return HttpResponseRedirect(success_url)
     else:
         return HttpResponse("Not implemented")
-        # return HttpResponseRedirect(model.get_absolute_url())
-    # my_name = request.POST["name"]
-    # temp = MyAdmin.objects.get(name = my_name).delete()
-    # return HttpResponse("Job done")
+
 
 def myadmin_all(request):
     model_list = django.apps.apps.get_models()
@@ -80,15 +77,17 @@ def myadmin_all(request):
 
 
 # PARTICUAL OBJECT RELATED VIEWS
-def myadmin_list_model(request, model_name):
-    print(model_name)
+def myadmin_object_list(request, model_name):
     view = ListView
-    # tmp = django.apps.apps.get_models()
-
     view.model = get_model(model_name)
     view.template_name = "myadmin/object_list.html"
-    #MyAdmin.objects.filter(name = model_name)[0]
 
+    def get_context_data(self, **kwargs):
+        context = super(view, self).get_context_data(**kwargs)
+        context['model_name'] = model_name
+        return context
+
+    view.get_context_data = get_context_data
     return view.as_view()(request)
 
 # def myadmin_update(request, pk):
