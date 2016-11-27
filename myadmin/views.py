@@ -21,24 +21,14 @@ def get_model(model_name):
 
 
 def myadmin_home(request):
-    # model_list = MyAdmin.objects.all()
     # return render(request, "myadmin/myadmin_home.html",
     #     context={'model_list': model_list})
 
     model_list = []
     for obj in MyAdmin.objects.all():
         model_list.append(obj.name)
-
-    # for model in get_models(app):
-    #     model_list.append(model._meta.db_table)
-
-    # return render(request, "myadmin/myadmin_home.html",
-    #      context={'model_list': model_list})
-    # print(model_list)
     return render(request, 'myadmin/myadmin_home.html',
         context = {'model_list': model_list})
-    # return HttpResponse("My chosen models:" + ", ".join(model_list))
-
 
 @require_http_methods(['GET', 'POST'])
 def myadmin_add(request):
@@ -119,7 +109,7 @@ def myadmin_detail(request, model_name, pk):
 def myadmin_object_delete(request, model_name, pk):
     deletator = DeleteView
     deletator.model = get_model(model_name)
-    deletator.success_url = reverse_lazy('myadmin-models-list',
+    deletator.success_url = reverse_lazy('myadmin-object-list',
         kwargs={'model_name': model_name},)
     def get_template_names(instance):
         return ['myadmin/delete_confirm.html']
@@ -145,7 +135,7 @@ def myadmin_object_create(request, model_name):
 
     creator.model = get_model(model_name)
     creator.fields = '__all__'
-    creator.success_url = reverse_lazy('myadmin-models-list', kwargs={'model_name': model_name})
+    creator.success_url = reverse_lazy('myadmin-object-list', kwargs={'model_name': model_name})
 
     def get_template_names(instance):
         return ['myadmin/object_create.html']
@@ -153,18 +143,3 @@ def myadmin_object_create(request, model_name):
     creator.get_template_names = get_template_names
 
     return creator.as_view()(request)
-
-
-
-class MyAdminListView(ListView):
-    template_name = "tu bedzie template ale jaki"
-
-
-# class ArticleListView(ListView):
-#
-#     model = Article
-#
-#     def get_context_data(self, **kwargs):
-#         context = super(ArticleListView, self).get_context_data(**kwargs)
-#         context['now'] = timezone.now()
-#         return context
